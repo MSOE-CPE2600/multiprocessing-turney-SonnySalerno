@@ -9,21 +9,29 @@ make clean
 make
 ```
 ### Different Arg Options:
-
--n `<child>`  Number of processes (default=1)
--f `<frames>` Number of frames (default=50)
--m `<max>`   The maximum number of iterations per point. (default=1000)
--x `<coord>`  X coordinate of image center point. (default=0)
--y `<coord>`  Y coordinate of image center point. (default=0)
--s `<scale>`  Scale of the image in Mandlebrot coordinates (X-axis). (default=4)
--W `<pixels>` Width of the image in pixels. (default=1000)
--H `<pixels>` Height of the image in pixels. (default=1000)
--o `<file>`   Set output file. (default=mandel.bmp)
--h          Show this help text.
-	
 ```bash
 ./mandelmovie -h
 ```
+-n `<child>`  Number of processes (default=1)
+
+-f `<frames>` Number of frames (default=50)
+
+-m `<max>`   The maximum number of iterations per point. (default=1000)
+
+-x `<coord>`  X coordinate of image center point. (default=0)
+
+-y `<coord>`  Y coordinate of image center point. (default=0)
+
+-s `<scale>`  Scale of the image in Mandlebrot coordinates (X-axis). (default=4)
+
+-W `<pixels>` Width of the image in pixels. (default=1000)
+
+-H `<pixels>` Height of the image in pixels. (default=1000)
+
+-o `<file>`   Set output file. (default=mandel.bmp)
+
+-h          Show this help text.
+	
 ### Example Compilations:
 ```bash
 ./mandelmovie -n 12
@@ -73,7 +81,6 @@ ffmpeg -framerate 50 -i mandel%d.jpg -c:v libx264 -pix_fmt yuv420p mandel.mp4
 |    05    |   48.632 |
 |    10    |   25.815 |
 |    20    |   22.580 |
-| -------- | -------- |
 
 ![alt text](graph.png)
 
