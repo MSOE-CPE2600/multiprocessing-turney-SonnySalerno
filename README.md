@@ -8,6 +8,15 @@ make clean
 ```bash
 make
 ```
+### To compile manually:
+Compile both:
+```bash
+gcc -o mandel mandel.c jpegrw.c -ljpeg -lm
+```
+```bash
+gcc -o mandelmovie mandelmovie.c -lm
+```
+
 ### Different Arg Options:
 ```bash
 ./mandelmovie -h
@@ -32,7 +41,9 @@ make
 
 -h          Show this help text.
 	
-### Example Compilations:
+---
+
+## Run Executable:
 ```bash
 ./mandelmovie -n 12
 ```
@@ -46,7 +57,7 @@ make
 ./mandelmovie -x 0.286932 -y 0.014287 -s .0005 -m 1000
 ```
 
-My personal favorite
+## My personal favorite:
 ```bash
 ./mandelmovie -x -.3678 -y .64988 -s .05 -m 6000 -n 12 -f 240
 ```

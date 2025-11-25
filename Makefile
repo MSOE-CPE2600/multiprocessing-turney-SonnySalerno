@@ -7,7 +7,7 @@ all: mandel mandelmovie
 mandel: mandel.o jpegrw.o
 	$(CC) -o mandel mandel.o jpegrw.o $(LDFLAGS)
 mandelmovie: mandelmovie.o 
-	$(CC) -o mandelmovie mandelmovie.o jpegrw.o $(LDFLAGS)
+	$(CC) -o mandelmovie mandelmovie.o -lm
 
 clean:
 	rm -f *.d *.o mandel mandelmovie *.jpg
