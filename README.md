@@ -16,7 +16,8 @@ gcc -o mandel mandel.c jpegrw.c -ljpeg -lm
 ```bash
 gcc -o mandelmovie mandelmovie.c -lm
 ```
-
+	
+---
 ### Different Arg Options:
 ```bash
 ./mandelmovie -h
@@ -40,8 +41,6 @@ gcc -o mandelmovie mandelmovie.c -lm
 -o `<file>`   Set output file. (default=mandel.bmp)
 
 -h          Show this help text.
-	
----
 
 ## Run Executable:
 ```bash
