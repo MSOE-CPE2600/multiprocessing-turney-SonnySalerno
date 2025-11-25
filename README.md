@@ -18,6 +18,8 @@ gcc -o mandelmovie mandelmovie.c -lm
 ```
 	
 ---
+
+## Run Executable:
 ### Different Arg Options:
 ```bash
 ./mandelmovie -h
@@ -42,7 +44,6 @@ gcc -o mandelmovie mandelmovie.c -lm
 
 -h          Show this help text.
 
-## Run Executable:
 ```bash
 ./mandelmovie -n 12
 ```
