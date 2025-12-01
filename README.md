@@ -111,7 +111,7 @@ ffmpeg -framerate 50 -i mandel%d.jpg -c:v libx264 -pix_fmt yuv420p mandel.mp4
 |     20     |    10.899s |    10.612s |    11.049s |    10.846s |    11.535s |
 
 ### Sweet Spot
-|  #Process  | 2 Threads  |
+|  #Process  |  2 Threads  |
 |     12     |    10.587s  |
 
 ![alt text](graph2.png)
