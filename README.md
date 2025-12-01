@@ -112,9 +112,11 @@ ffmpeg -framerate 50 -i mandel%d.jpg -c:v libx264 -pix_fmt yuv420p mandel.mp4
 
 ### Sweet Spot
 12 Processes & 2 Threads  |  10.587s
+
+
 ***The Sweetspot*** 
 
-I found a sweet spot for me is 12 processes and 2 threads at 10.587s. At high process counts (e.g., 20), increasing threads from 2 to 20 actually worsened performance.
+- I found a sweet spot for me is 12 processes and 2 threads at 10.587s. At high process counts (e.g., 20), increasing threads from 2 to 20 actually worsened performance.
 
 ![alt text](graph2.png)
 
