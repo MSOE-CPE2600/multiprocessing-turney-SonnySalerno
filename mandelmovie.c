@@ -173,8 +173,6 @@ int main(int argc, char *argv[]) {
     if (num_threads < 1) num_threads = 1;
     
     const char *mandel_path = "./mandel";
-
-    printf("mandelmovie: children=%d threads=%d frames=%d\n", num_children, num_threads, frames);
     
     // Loops over each frame 
     int running = 0;    // Number of active children
@@ -192,7 +190,7 @@ int main(int argc, char *argv[]) {
         // Launches child process
         pid_t p = launch_mandel(mandel_path, foutfile, xcenter, ycenter, scale, 
 			image_width, image_height, max, num_threads);
-
+        
         if (p < 0) {
             printf("failed launching child\n");
             while (wait(NULL) > 0) {}
@@ -212,7 +210,8 @@ int main(int argc, char *argv[]) {
     // Calcs exe time
 	time = (tend.tv_sec - tstart.tv_sec) + 
 		(tend.tv_usec - tstart.tv_usec) / 1000000.0;
-
+        
+    printf("mandelmovie: children=%d threads=%d frames=%d\n", num_children, num_threads, frames);
     printf("All %d frames completed in %.3f seconds.\n", frames, time);
     return 0;
 }
