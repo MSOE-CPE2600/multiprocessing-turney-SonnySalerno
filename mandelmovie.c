@@ -1,11 +1,11 @@
 /*******************************************************************
 * Filename: mandelmovie.c
 * Description: envolks mandel for generating frames to create 
-* fractal movie with different child processes
-* Author: Sonny Salerno
+* fractal movie with different child processes and threads.
+* Author: Sonny Salerno (Modified for Lab 12)
 * Date: 11/24/2025
 * Note: make clean, make, 
-* ./mandelmovie -x -.3678 -y .64988 -s .05 -m 6000 -n 12 -f 240, 
+* ./mandelmovie -x -.3678 -y .64988 -s .05 -m 6000 -n 12 -f 240 -t 4, 
 * ffmpeg -i -framerate 60 mandel%d.jpg mandel.mpg
 *********************************************************************/
 
@@ -18,7 +18,7 @@
 
 // Prints command line help
 void show_help() {
-	printf("Use: mandel [options]\n");
+	printf("Use: mandelmovie [options]\n");
 	printf("Where options are:\n");
 	printf("-n <child>  Number of processes (default=1)\n");
     printf("-f <frames> Number of frames (default=50)\n");
@@ -29,6 +29,7 @@ void show_help() {
 	printf("-W <pixels> Width of the image in pixels. (default=1000)\n");
 	printf("-H <pixels> Height of the image in pixels. (default=1000)\n");
 	printf("-o <file>   Set output file. (default=mandel.bmp)\n");
+    printf("-t <threads> Number of threads per process. (default=1)\n");
 	printf("-h          Show this help text.\n");
 	printf("\nSome examples are:\n");
 	printf("mandel -x -0.5 -y -0.5 -s 0.2\n");
@@ -46,7 +47,7 @@ double scale_at(int index, double start, double reduction) {
 
 // Launches a single mandelbrot image using execv() to envlok mandel
 pid_t launch_mandel(const char *mandel_path, const char *foutfile, double xcenter, 
-	double ycenter, double xscale, int image_width, int image_height, int max) {
+	double ycenter, double xscale, int image_width, int image_height, int max, int threads) {
         
     pid_t pid = fork(); // Creates a new child
     if (pid < 0) {
@@ -56,7 +57,7 @@ pid_t launch_mandel(const char *mandel_path, const char *foutfile, double xcente
 
     if (pid == 0) {
         // Converts args that are numbers into strings
-        char sx[64], sy[64], ss[64], sw[32], sh[32], sm[32];
+        char sx[64], sy[64], ss[64], sw[32], sh[32], sm[32], st[32];
 
         snprintf(sx, sizeof(sx), "%g", xcenter);
         snprintf(sy, sizeof(sy), "%g", ycenter);
@@ -64,9 +65,11 @@ pid_t launch_mandel(const char *mandel_path, const char *foutfile, double xcente
         snprintf(sw, sizeof(sw), "%d", image_width);
         snprintf(sh, sizeof(sh), "%d", image_height);
         snprintf(sm, sizeof(sm), "%d", max);
+        snprintf(st, sizeof(st), "%d", threads);
 
         // Builds the arg list to envolk mandel
-        char *args[16];
+        // IMPORTANT: Increased array size to accommodate new -t args
+        char *args[20];
         int i = 0;
         args[i++] = (char *)mandel_path;
         args[i++] = "-x"; 
@@ -83,6 +86,8 @@ pid_t launch_mandel(const char *mandel_path, const char *foutfile, double xcente
 		args[i++] = sm;
         args[i++] = "-o"; 
 		args[i++] = (char *)foutfile;
+        args[i++] = "-t";
+        args[i++] = st;
         args[i] = NULL;
 
         execv(mandel_path, args);   // Replaces processed image with mandel
@@ -101,6 +106,8 @@ int main(int argc, char *argv[]) {
     int num_children = 1;   // Defaults 1 process
     int frames = 50;        // Defaults 50 frames
 	double reduction = 0.95;
+    int num_threads = 1;    // Defaults 1 thread
+
 
 	const char *outfile = "mandel";
 	double xcenter = 0.0;
@@ -118,7 +125,8 @@ int main(int argc, char *argv[]) {
     gettimeofday(&tstart, NULL);
 
     // Parsing command line
-    while ((c = getopt(argc, argv, "n:f:x:y:s:W:H:m:o:h")) != -1) {
+    // Added 't' to optstring
+    while ((c = getopt(argc, argv, "n:f:x:y:s:W:H:m:o:h:t:")) != -1) {
         switch (c) {
             case 'n':
 				num_children = atoi(optarg);
@@ -147,6 +155,9 @@ int main(int argc, char *argv[]) {
 			case 'o':
 				outfile = optarg;
 				break;
+            case 't': // Parse thread count
+                num_threads = atoi(optarg);
+                break;
 			case 'h':
 				show_help();
 				exit(1);
@@ -158,9 +169,12 @@ int main(int argc, char *argv[]) {
 		num_children = 1;
     if (frames < 1) 
 		frames = 1;
+    // Cap threads to reasonable limit or strict 20 if desired
+    if (num_threads < 1) num_threads = 1;
+    
     const char *mandel_path = "./mandel";
 
-    printf("mandelmovie: children=%d frames=%d\n", num_children, frames);
+    printf("mandelmovie: children=%d threads=%d frames=%d\n", num_children, num_threads, frames);
     
     // Loops over each frame 
     int running = 0;    // Number of active children
@@ -177,7 +191,7 @@ int main(int argc, char *argv[]) {
         snprintf(foutfile, sizeof(foutfile), "%s%d.jpg", outfile, i);
         // Launches child process
         pid_t p = launch_mandel(mandel_path, foutfile, xcenter, ycenter, scale, 
-			image_width, image_height, max);
+			image_width, image_height, max, num_threads);
 
         if (p < 0) {
             printf("failed launching child\n");
