@@ -114,10 +114,6 @@ ffmpeg -framerate 50 -i mandel%d.jpg -c:v libx264 -pix_fmt yuv420p mandel.mp4
 12 Processes & 2 Threads  |  10.587s
 
 
-***The Sweetspot*** 
-
-- I found a sweet spot for me is 12 processes and 2 threads at 10.587s. At high process counts (e.g., 20), increasing threads from 2 to 20 actually worsened performance.
-
 ![alt text](graph2.png)
 
 ---
@@ -132,8 +128,15 @@ The speedup begins to flatten between 10 and 20 processes. This is expected beca
 - The `mandel` program itself is CPU based
 
 
-***Multiprocessing and Multithreading*** Multiprocessing provides strong speedup up to around 12 processes on my system, but additional processes beyond that point will result in smaller performance gains. While threads are lighter weight, they share the same memory space. As the number of threads increases, they may contend for memory bandwidth. If the number of total threads (Processes × Threads) exceeds the number of physical CPU cores, the OS must perform "context switching," swapping threads in and out rapidly.This overhead eventually negates the benefit of adding more threads. However, from my data using both is benificial to get faster times than just mulitprocessing.
+***Multiprocessing and Multithreading*** 
+Multiprocessing Best for: CPU-bound tasks like data processing, image rendering, or mathematical computations. It provides stronger speedup up to around 12 processes on my system, but additional processes beyond that point will result in smaller performance gains. While threads are lighter weight, they share the same memory space. As the number of threads increases, they may contend for memory bandwidth. If the number of total threads (Processes × Threads) exceeds the number of physical CPU cores, the OS must perform "context switching," swapping threads in and out rapidly. This overhead eventually negates the benefit of adding more threads. Multithreading
+Best for: I/O-bound tasks, such as network requests or file operations, where the program spends a lot of time waiting.
 
+From my data using both is benificial to get faster times rather than just mulitprocessing. Multiprocessing does the heavy lifting while Multithreading does the fine tuning.
+
+***The Sweetspot*** 
+
+- I found a sweet spot for me is 12 processes and 2 threads at 10.587s. At high process counts (e.g. 20), increasing threads from 2 to 20 actually worsened performance. Yes, minimal runtime was achieved!
 
 ### To increase program preformance: 
 - Go to your systems motherboard BIOS and overclock your CPU.

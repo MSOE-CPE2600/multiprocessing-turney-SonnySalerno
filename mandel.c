@@ -6,7 +6,7 @@
 * https://users.cs.fiu.edu/~cpoellab/teaching/cop4610_fall22/project3.html
 * Date: 11/24/2025
 * Note: make clean, make, 
-* ./mandel -x -.3678 -y .64988 -s .05 -m 6000 -n 12 -t 14
+* ./mandel -x -.3678 -y .64988 -s .05 -m 6000 -t 14
 *********************************************************************/
 #include <stdlib.h>
 #include <stdio.h>
